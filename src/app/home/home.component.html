@@ -1,0 +1,122 @@
+<!-- home.component.html -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Добро пожаловать в <span class="accent">LearnHub</span>!</h1>
+    <p class="subtitle">
+      Ваша персональная платформа для онлайн-обучения. Здесь вы найдёте курсы от
+      ведущих преподавателей, удобный календарь занятий и систему контроля
+      заданий.
+    </p>
+    <div class="features">
+      <div class="feature">
+        <mat-icon>school</mat-icon>
+        <span>Интерактивные курсы</span>
+      </div>
+      <div class="feature">
+        <mat-icon>calendar_today</mat-icon>
+        <span>Гибкое расписание</span>
+      </div>
+      <div class="feature">
+        <mat-icon>assignment</mat-icon>
+        <span>Автоматическая проверка ДЗ</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- home.component.html -->
+<section class="auth-section" *ngIf="!isLoggedIn">
+  <mat-card *ngIf="!showForgotPasswordForm">
+    <mat-card-header>
+      <mat-card-title>
+        {{ isLoginMode ? "Вход в аккаунт" : "Регистрация" }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+        <!-- Имя (только для регистрации) -->
+        <mat-form-field *ngIf="!isLoginMode">
+          <input matInput name="name" ngModel placeholder="Ваше имя" required />
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field>
+          <input
+            matInput
+            type="email"
+            name="email"
+            #emailInput="ngModel"
+            ngModel
+            placeholder="Email"
+            required
+            email
+          />
+          <mat-error *ngIf="emailInput.invalid && emailInput.touched">
+            Введите корректный email
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Пароль -->
+        <mat-form-field>
+          <input
+            matInput
+            type="password"
+            name="password"
+            ngModel
+            placeholder="Пароль"
+            required
+            minlength="6"
+          />
+        </mat-form-field>
+
+        <div class="forgot-password" *ngIf="isLoginMode">
+          <a (click)="showForgotPasswordForm = true">Забыли пароль?</a>
+        </div>
+        <!-- Кнопка отправки -->
+        <button mat-raised-button [disabled]="authForm.invalid || isLoading">
+          <span *ngIf="!isLoading">{{
+            isLoginMode ? "Войти" : "Зарегистрироваться"
+          }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </form>
+
+      <!-- Переключение режима -->
+      <p class="toggle-mode">
+        {{ isLoginMode ? "Нет аккаунта?" : "Уже есть аккаунт?" }}
+        <a (click)="toggleMode()">
+          {{ isLoginMode ? "Зарегистрироваться" : "Войти" }}
+        </a>
+      </p>
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<!-- home.component.html -->
+<div *ngIf="showForgotPasswordForm" class="forgot-password-form">
+  <h3>Восстановление пароля</h3>
+  <p>Введите email, и мы отправим ссылку для сброса пароля.</p>
+
+  <form #forgotForm="ngForm" (ngSubmit)="onForgotPassword(forgotForm)">
+    <mat-form-field>
+      <input
+        matInput
+        type="email"
+        name="email"
+        ngModel
+        placeholder="Email"
+        required
+        email
+      />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" [disabled]="forgotForm.invalid">
+      Отправить
+    </button>
+
+    <button mat-button type="button" (click)="showForgotPasswordForm = false">
+      Назад
+    </button>
+  </form>
+</div>

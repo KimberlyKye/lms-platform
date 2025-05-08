@@ -1,0 +1,23 @@
+<div class="calendar-container">
+  <full-calendar
+    [options]="calendarOptions"
+    (dateClick)="handleDateClick($event)"
+    (eventClick)="handleEventClick($event)"
+  ></full-calendar>
+</div>
+
+<!-- calendar.component.html -->
+<div class="deadline-notices" *ngIf="upcomingDeadlines.length > 0">
+  <h3>Ближайшие дедлайны</h3>
+  <mat-chip-listbox>
+    <mat-chip
+      *ngFor="let event of upcomingDeadlines"
+      [style.border-left]="
+        '4px solid ' + (event['type'] === 'deadline' ? '#f44336' : '#3f51b5')
+      "
+      (click)="helperEventClick(event)"
+    >
+      {{ event.title }} — {{ event.start?.toString() }}
+    </mat-chip>
+  </mat-chip-listbox>
+</div>

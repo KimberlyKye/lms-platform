@@ -1,0 +1,48 @@
+<mat-toolbar color="primary" class="header">
+  <!-- Логотип/Название (кликабельно) -->
+  <a routerLink="/" class="logo">
+    <mat-icon>school</mat-icon>
+    <span>LearnHub</span>
+  </a>
+
+  <!-- Пустое пространство (для выравнивания) -->
+  <span class="spacer"></span>
+
+  <!-- Меню для авторизованных -->
+  <nav *ngIf="isLoggedIn" class="nav-links">
+    <a mat-button routerLink="/profile" routerLinkActive="active">
+      <mat-icon>account_circle</mat-icon>
+      Профиль
+    </a>
+    <a mat-button routerLink="/calendar" routerLinkActive="active">
+      <mat-icon>calendar_today</mat-icon>
+      Календарь
+    </a>
+    <a mat-button routerLink="/courses" routerLinkActive="active">
+      <mat-icon>book</mat-icon>
+      Курсы
+    </a>
+    <button mat-icon-button (click)="logout()" title="Выйти">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </nav>
+
+  <!-- Кнопка входа для неавторизованных -->
+  <a *ngIf="!isLoggedIn" mat-button routerLink="/home" class="login-button">
+    <mat-icon>login</mat-icon>
+    Войти
+  </a>
+
+  <!-- Для мобильных -->
+<button *ngIf="isLoggedIn" mat-icon-button (click)="toggleMobileMenu()" class="mobile-menu-button">
+  <mat-icon>menu</mat-icon>
+</button>
+
+<!-- Мобильное меню (появляется по клику) -->
+<div *ngIf="isMobileMenuOpen" class="mobile-menu">
+  <a mat-button routerLink="/profile" (click)="toggleMobileMenu()">Профиль</a>
+  <a mat-button routerLink="/calendar" (click)="toggleMobileMenu()">Календарь</a>
+  <a mat-button routerLink="/courses" (click)="toggleMobileMenu()">Курсы</a>
+  <button mat-button (click)="logout(); toggleMobileMenu()">Выйти</button>
+</div>
+</mat-toolbar>

@@ -1,0 +1,54 @@
+<div class="profile-container">
+  <mat-card>
+    <!-- Заголовок -->
+    <mat-card-header>
+      <mat-card-title>Профиль пользователя</mat-card-title>
+    </mat-card-header>
+
+    <!-- Табы -->
+    <mat-tab-group>
+      <!-- Основная информация -->
+      <mat-tab label="Основное">
+        <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <mat-card-content>
+            <!-- Поля формы -->
+            <mat-form-field>
+              <input matInput formControlName="name" placeholder="ФИО" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                formControlName="email"
+                placeholder="Email"
+                type="email"
+                [attr.disabled]="true"
+              />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input matInput formControlName="phone" placeholder="Телефон" />
+              <mat-hint>Формат: +7 (XXX) XXX-XX-XX</mat-hint>
+            </mat-form-field>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="profileForm.invalid || !profileForm.dirty"
+            >
+              Сохранить
+            </button>
+          </mat-card-actions>
+        </form>
+      </mat-tab>
+
+      <!-- Смена пароля -->
+      <mat-tab label="Безопасность">
+        <app-change-password></app-change-password>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

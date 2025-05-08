@@ -1,0 +1,20 @@
+.calendar-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .fc-event {
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 2px 5px;
+  }
+
+  .fc-event-deadline {
+    border-left: 4px solid #f44336;
+  }
+
+  .fc-toolbar-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+}

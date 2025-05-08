@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ data.task.title }}</h2>
+
+<mat-dialog-content>
+  <p>{{ data.task.description }}</p>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Комментарий</mat-label>
+    <textarea matInput [(ngModel)]="comment"></textarea>
+  </mat-form-field>
+
+  <div class="file-upload">
+    <input
+      type="file"
+      id="fileInput"
+      (change)="onFileSelected($event)"
+      style="display: none"
+    />
+    <button mat-stroked-button (click)="fileInput.click()">
+      <mat-icon>attach_file</mat-icon>
+      Прикрепить файл
+    </button>
+    <span *ngIf="selectedFile">{{ selectedFile.name }}</span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Отмена</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="submitTask()"
+    [disabled]="!selectedFile"
+  >
+    Отправить
+  </button>
+</mat-dialog-actions>

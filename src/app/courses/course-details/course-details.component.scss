@@ -1,0 +1,75 @@
+.course-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 2rem;
+
+  .course-description {
+    color: #666;
+    margin: 1rem 0;
+  }
+
+  .course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #555;
+    }
+  }
+
+  .course-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    span {
+      font-weight: 500;
+    }
+  }
+}
+
+.lessons-accordion {
+  margin-top: 2rem;
+
+  .lesson-content {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+
+    .materials {
+      margin-top: 1rem;
+    }
+  }
+
+  .home-tasks {
+    margin-top: 1rem;
+
+    .task-card {
+      margin: 0.5rem 0;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .course-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .course-progress {
+      margin-top: 1.5rem;
+    }
+  }
+}

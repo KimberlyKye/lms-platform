@@ -1,0 +1,68 @@
+<div class="courses-container">
+  <!-- Фильтры -->
+  <div class="filters">
+    <mat-form-field>
+      <mat-label>Статус курса</mat-label>
+      <mat-select [(ngModel)]="stateFilter">
+        <mat-option value="all">Все курсы</mat-option>
+        <mat-option [value]="CourseState.Active">Активные</mat-option>
+        <mat-option [value]="CourseState.Archive">Архивные</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Поиск курсов</mat-label>
+      <input matInput [(ngModel)]="searchQuery" placeholder="Название курса" />
+    </mat-form-field>
+  </div>
+
+  <!-- Список курсов -->
+  <div class="courses-grid">
+    <mat-card *ngFor="let course of filteredCourses" class="course-card">
+      <mat-card-header>
+        <mat-card-title>{{ course.name }}</mat-card-title>
+        <mat-card-subtitle>
+          Преподаватель: {{ course.teacher.name }}
+        </mat-card-subtitle>
+        <span
+          class="course-state"
+          [class.active]="course.state === CourseState.Active"
+        >
+          {{ course.state === CourseState.Active ? "Активный" : "Архивный" }}
+        </span>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>{{ course.description }}</p>
+
+        <div class="course-meta">
+          <div>
+            <mat-icon>date_range</mat-icon>
+            {{ course.duration.startDate | date : "dd.MM.yyyy" }} -
+            {{ course.duration.endDate | date : "dd.MM.yyyy" }}
+          </div>
+          <div>
+            <mat-icon>school</mat-icon>
+            Уроков: {{ course.lessons.length }}
+          </div>
+        </div>
+
+        <mat-progress-bar
+          mode="determinate"
+          [value]="getCourseProgress(course)"
+          color="primary"
+        ></mat-progress-bar>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button
+          mat-flat-button
+          color="primary"
+          [routerLink]="['/courses', course.id]"
+        >
+          Открыть курс
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
