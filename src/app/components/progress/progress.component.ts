@@ -3,21 +3,59 @@ import { Component, ViewChild } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { CourseService } from '../../courses/course.service';
 
 @Component({
   selector: 'app-progress',
-  imports: [CommonModule, MatIconModule, MatExpansionModule, MatCardModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatCardModule,
+    RouterModule,
+  ],
+  providers: [CourseService],
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.scss',
 })
 export class ProgressComponent {
   @ViewChild('progressChart', { static: true }) progressChartRef: any;
   chart: Chart | null;
+  courseId: string | null = null;
+  isLoading = true;
 
-  constructor() {
+  constructor(
+    private route: ActivatedRoute,
+    private courseService: CourseService
+  ) {
     this.chart = null;
     Chart.register(...registerables);
+  }
+
+  ngOnInit() {
+    this.courseId = this.route.snapshot.queryParamMap.get('courseId');
+
+    if (this.courseId) {
+      // Загрузка данных по конкретному курсу
+      this.loadCourseProgress(this.courseId);
+    } else {
+      // Загрузка общего прогресса по всем курсам
+      this.loadAllProgress();
+    }
+  }
+
+  loadAllProgress() {}
+
+  loadCourseProgress(courseId: string) {
+    // this.courseService.getCourseProgress(courseId).subscribe({
+    //   next: (data) => {
+    //     this.initChart(data);
+    //     this.isLoading = false;
+    //   },
+    //   error: () => this.isLoading = false
+    // });
   }
 
   // Данные для примера

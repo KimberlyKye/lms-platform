@@ -22,6 +22,10 @@
       <mat-icon>book</mat-icon>
       Курсы
     </a>
+      <a mat-button routerLink="/progress" routerLinkActive="active">
+        <mat-icon>trending_up</mat-icon>
+        Прогресс обучения
+      </a>
     <button mat-icon-button (click)="logout()" title="Выйти">
       <mat-icon>logout</mat-icon>
     </button>
@@ -43,6 +47,7 @@
   <a mat-button routerLink="/profile" (click)="toggleMobileMenu()">Профиль</a>
   <a mat-button routerLink="/calendar" (click)="toggleMobileMenu()">Календарь</a>
   <a mat-button routerLink="/courses" (click)="toggleMobileMenu()">Курсы</a>
+  <a mat-button routerLink="/progress" (click)="toggleMobileMenu()">Прогресс обучения</a>
   <button mat-button (click)="logout(); toggleMobileMenu()">Выйти</button>
 </div>
 </mat-toolbar>

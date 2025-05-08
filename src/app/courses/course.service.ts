@@ -6,12 +6,23 @@ import { CourseState } from '../shared/enums/course-state.enum';
 import { Teacher } from '../shared/types/teacher';
 import { Lesson } from '../shared/types/lesson';
 import { HomeTask } from '../shared/types/home-task';
+import { HttpClient } from '@angular/common/http';
+import { CourseProgress } from '../shared/types/course-progress';
+import { StudentProgress } from '../shared/types/student-progress';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CourseService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
+
+  getCourseProgress(courseId: string): Observable<CourseProgress> {
+    return this.http.get<CourseProgress>(`/api/progress/${courseId}`);
+  }
+
+  getAllProgress(): Observable<StudentProgress> {
+    return this.http.get<StudentProgress>('/api/students/progress');
+  }
 
   getCourseById(id: string): Observable<Course> {
     let course: Course = {
