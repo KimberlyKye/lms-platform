@@ -38,6 +38,17 @@
   <div class="course-layout">
     <!-- Левая колонка - Уроки -->
     <div class="lessons-column">
+      <div class="course-actions">
+        <button
+          mat-stroked-button
+          routerLink="/progress"
+          [queryParams]="{ courseId: course?.id }"
+        >
+          <mat-icon>assessment</mat-icon>
+          Прогресс по курсу
+        </button>
+      </div>
+
       <!-- Список уроков -->
       <mat-accordion class="lessons-accordion">
         <mat-expansion-panel *ngFor="let lesson of course?.lessons; index as i">
@@ -47,6 +58,9 @@
             </mat-panel-title>
             <mat-panel-description>
               {{ lesson.date | date : "dd.MM.yyyy" }}
+              <span *ngIf="lesson.score" class="grade-badge small">
+                {{ lesson.score }}
+              </span>
             </mat-panel-description>
           </mat-expansion-panel-header>
 
@@ -147,7 +161,8 @@
 
                 <div class="task-meta">
                   <span
-                    >Дедлайн: {{ task.duration.endDate | date : "dd.MM.yy" }}</span
+                    >Дедлайн:
+                    {{ task.duration.endDate | date : "dd.MM.yy" }}</span
                   >
                   <span *ngIf="getStudentWork$(task) | async">
                     Оценка: {{ getWorkScore$(task) | async }}

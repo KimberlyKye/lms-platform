@@ -7,12 +7,14 @@ export class Lesson extends Entity {
   date: string | Date;
   material: any;
   homeTasks: HomeTask[] = [];
+  score?: number;
 
   constructor(
     lessonName: string,
     description: string,
     date: string | Date,
     material?: any,
+    score?: number,
     id?: number
   ) {
     super(id);
@@ -20,6 +22,7 @@ export class Lesson extends Entity {
     this.description = description;
     this.date = date;
     this.material = material;
+    this.score = score;
     this.homeTasks = [];
   }
 

@@ -9,6 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ChangePasswordComponent } from '../components/change-password/change-password.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -21,6 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     ChangePasswordComponent,
     MatButtonModule,
+    MatIconModule,
+    RouterModule,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',

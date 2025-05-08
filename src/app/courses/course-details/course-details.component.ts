@@ -1,6 +1,6 @@
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Course } from '../../shared/types/course';
@@ -33,6 +33,7 @@ import { map, Observable } from 'rxjs';
     MatProgressSpinnerModule,
     MatSelectModule,
     FormsModule,
+    RouterModule
   ],
 })
 export class CourseDetailsComponent implements OnInit {

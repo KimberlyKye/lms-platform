@@ -1,0 +1,67 @@
+<div class="progress-container">
+  <!-- Общая статистика -->
+  <mat-card class="summary-card">
+    <mat-card-header>
+      <mat-card-title>Мой прогресс</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="progress-stats">
+        <div class="stat-item">
+          <div class="stat-value">{{ completedLessons }}/{{ totalLessons }}</div>
+          <div class="stat-label">Уроков завершено</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ avgGrade || '—' }}</div>
+          <div class="stat-label">Средний балл</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ overdueTasks }}</div>
+          <div class="stat-label">Просроченных ДЗ</div>
+        </div>
+      </div>
+
+      <!-- График прогресса -->
+      <div class="progress-chart">
+        <canvas #progressChart width="400" height="200"></canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Детали по урокам -->
+  <mat-card class="details-card">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let lesson of course.lessons">
+        <mat-expansion-panel-header>
+          <mat-panel-title>Урок {{ lesson.lessonNumber }}: {{ lesson.lessonName }}</mat-panel-title>
+          <mat-panel-description>
+            <span [class]="getLessonStatusClass(lesson)">
+              {{ getLessonStatus(lesson) }}
+            </span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Оценка за урок -->
+        <div class="lesson-grade">
+          <h4>Работа на уроке:</h4>
+          <div class="grade-badge" [class]="getGradeClass(lesson.attendanceGrade)">
+            {{ lesson.attendanceGrade || '—' }}
+          </div>
+        </div>
+
+        <!-- ДЗ к уроку -->
+        <div *ngIf="lesson.homeTask" class="homework-grade">
+          <h4>Домашнее задание:</h4>
+          <div class="grade-details">
+            <div class="grade-badge" [class]="getGradeClass(lesson.homeTask.grade)">
+              {{ lesson.homeTask.grade || '—' }}
+            </div>
+            <div *ngIf="lesson.homeTask.teacherComment" class="teacher-comment">
+              <mat-icon>feedback</mat-icon>
+              <p>{{ lesson.homeTask.teacherComment }}</p>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card>
+</div>

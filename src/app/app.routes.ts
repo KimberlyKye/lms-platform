@@ -5,6 +5,7 @@ import { CourseDetailsComponent } from './courses/course-details/course-details.
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { CoursesComponent } from './courses/courses.component';
+import { ProgressComponent } from './components/progress/progress.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,12 @@ export const routes: Routes = [
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'progress',
+    component: ProgressComponent,
+    canActivate: [AuthGuard],
+    // data: { role: 'student' } // Только для студентов
   },
   {
     path: 'calendar',
