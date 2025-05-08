@@ -6,7 +6,7 @@ export class Lesson extends Entity {
   description: string;
   date: string | Date;
   material: any;
-  homeTasks: HomeTask[];
+  homeTasks: HomeTask[] = [];
 
   constructor(
     lessonName: string,
@@ -21,5 +21,10 @@ export class Lesson extends Entity {
     this.date = date;
     this.material = material;
     this.homeTasks = [];
+  }
+
+  addHomeTask(homeTask: HomeTask): Lesson {
+    this.homeTasks.push(homeTask);
+    return this;
   }
 }

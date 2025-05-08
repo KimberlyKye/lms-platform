@@ -1,4 +1,6 @@
-export class Person {
+import { Entity } from './entity';
+
+export class Person extends Entity {
   name: string;
   phoneNumber: string;
   email: string;
@@ -8,8 +10,11 @@ export class Person {
     name: string,
     phoneNumber: string,
     email: string,
-    dateOfBirth: string | Date
+    dateOfBirth: string | Date,
+    id?: string
   ) {
+    super(id);
+
     this.name = name;
     this.phoneNumber = phoneNumber;
     this.email = email;

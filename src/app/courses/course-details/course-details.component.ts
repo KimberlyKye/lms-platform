@@ -13,12 +13,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TaskStatus } from '../../shared/types/task-status';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { HomeTask } from '../../shared/types/home-task';
+import { UserService } from '../../services/user.service';
+import { AuthService } from '../../auth/auth.service';
+import { HomeWork } from '../../shared/types/home-work';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-course-details',
   templateUrl: './course-details.component.html',
   styleUrls: ['./course-details.component.scss'],
-  providers: [CourseService],
+  providers: [CourseService, UserService, AuthService],
   imports: [
     CommonModule,
     MatCardModule,
@@ -27,7 +32,7 @@ import { FormsModule } from '@angular/forms';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    FormsModule
+    FormsModule,
   ],
 })
 export class CourseDetailsComponent implements OnInit {
@@ -36,11 +41,15 @@ export class CourseDetailsComponent implements OnInit {
   taskFilter = 'active';
   allTasks: Array<any> = [];
   filteredTasks: Array<any> = [];
+  newTasksCount = 0;
+  currentUser: any;
 
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private userService: UserService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -80,11 +89,24 @@ export class CourseDetailsComponent implements OnInit {
     return progress > 75 ? 'primary' : progress > 30 ? 'accent' : 'warn';
   }
 
-  openTaskDialog(task: any) {
-    this.dialog.open(SubmitTaskDialogComponent, {
-      data: { task },
-      width: '600px',
+  openTaskDialog(task: HomeTask) {
+    const dialogRef = this.dialog.open(SubmitTaskDialogComponent, {
+      width: '800px',
+      data: {
+        task: task,
+        studentId: this.currentUser?.id,
+      },
     });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.submitHomework(task, result);
+      }
+    });
+  }
+
+  submitHomework(task: HomeTask, result: any) {
+    throw new Error('Method not implemented.');
   }
 
   prepareTasksList() {
@@ -134,6 +156,77 @@ export class CourseDetailsComponent implements OnInit {
       element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       element.classList.add('highlight');
       setTimeout(() => element.classList.remove('highlight'), 2000);
+    }
+  }
+
+  // Получаем работу текущего студента
+  getStudentWork$(task: HomeTask): Observable<HomeWork | null> {
+    return this.authService.getCurrentUser().pipe(
+      map((user) => {
+        const currentStudentId = user.id;
+        const studentWork = task.homeWorks.find(
+          (hw) => hw.student.id === currentStudentId
+        );
+        return studentWork ?? null;
+      })
+    );
+  }
+
+  // Проверка новых элементов
+  checkForNewItems() {
+    this.newTasksCount = this.allTasks.filter(
+      (task) => this.isTaskNew(task) || this.hasNewComments(task)
+    ).length;
+  }
+
+  isTaskNew(task: HomeTask): boolean {
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+    return new Date(task.duration.startDate) > threeDaysAgo;
+  }
+
+  hasNewComments(task: HomeTask): Observable<boolean> {
+    return this.getStudentWork$(task).pipe(
+      map((workRes) => {
+        const work = workRes;
+
+        if (!work) return false;
+
+        const lastViewed =
+          this.userService.getLastCommentView(task.homeTaskName) ?? '';
+        return !!(
+          work.teacherComment &&
+          new Date(work.completionDate) > new Date(lastViewed)
+        );
+      })
+    );
+  }
+
+  getWorkScore$(task: HomeTask): Observable<string> {
+    return this.getStudentWork$(task).pipe(
+      map((workRes) => {
+        const work = workRes;
+        if (!work) return '';
+        return work.score ? `${work.score}` : '-0';
+      })
+    );
+  }
+
+  openTask(task: HomeTask) {
+    // Помечаем как просмотренное
+    if (task.isNew) {
+      task.isNew = false;
+      this.newTasksCount--;
+    }
+
+    // Обновляем время просмотра комментариев
+    if (task.hasNewComments) {
+      this.userService.updateLastCommentView(
+        task.homeTaskName,
+        new Date().toISOString()
+      );
+      task.hasNewComments = false;
+      this.newTasksCount--;
     }
   }
 }

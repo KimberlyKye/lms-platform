@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { Lesson } from '../shared/types/lesson';
 
 @Component({
   selector: 'app-courses',
@@ -62,7 +63,7 @@ export class CoursesComponent implements OnInit {
           description: 'Основы управления состоянием',
           material: null,
           homeTasks: [],
-        },
+        } as unknown as Lesson,
       ],
       students: [],
     },

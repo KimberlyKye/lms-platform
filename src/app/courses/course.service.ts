@@ -5,6 +5,7 @@ import { Duration } from '../shared/types/duration';
 import { CourseState } from '../shared/enums/course-state.enum';
 import { Teacher } from '../shared/types/teacher';
 import { Lesson } from '../shared/types/lesson';
+import { HomeTask } from '../shared/types/home-task';
 
 @Injectable({
   providedIn: 'root',
@@ -27,11 +28,35 @@ export class CourseService {
         new Date('1985-05-05')
       ),
       lessons: [
-        new Lesson('Основы', 'Введение в Angular', new Date('2025-01-01')),
+        new Lesson(
+          'Основы',
+          'Введение в Angular',
+          new Date('2025-01-01')
+        ).addHomeTask(
+          new HomeTask(
+            'Написать программу на Angular',
+            'Приложение должно содержать компоненты, сервисы, маршрутизацию и использование инжектирования зависимостей.',
+            new Duration(new Date('2025-01-01'), new Date('2025-01-02')),
+            null,
+            [],
+            false,
+            true
+          )
+        ),
         new Lesson(
           'Интерфейсы',
           'Создание интерфейсов',
           new Date('2025-01-02')
+        ).addHomeTask(
+          new HomeTask(
+            'Создать интерфейс',
+            'Создать интерфейс, который будет описывать структуру объекта, содержащего информацию о пользователе.',
+            new Duration(new Date('2025-01-02'), new Date('2025-01-03')),
+            null,
+            [],
+            true,
+            false
+          )
         ),
         new Lesson(
           'Компоненты',

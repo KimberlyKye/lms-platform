@@ -95,10 +95,15 @@
     <div class="tasks-sidebar">
       <mat-card>
         <mat-card-header>
-          <mat-card-title>
-            <mat-icon>assignment</mat-icon>
-            Все задания
-          </mat-card-title>
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>assignment</mat-icon>
+              Все задания
+              <span *ngIf="newTasksCount > 0" class="counter-badge">
+                {{ newTasksCount }}
+              </span>
+            </mat-card-title>
+          </mat-card-header>
           <mat-card-subtitle>
             {{ filteredTasks.length }} из {{ allTasks.length }}
           </mat-card-subtitle>
@@ -123,17 +128,30 @@
             <div
               *ngFor="let task of filteredTasks"
               class="task-item"
-              [class.active]="activeTaskId === task.id"
-              (click)="navigateToTask(task)"
+              [class.has-new]="task.isNew || task.hasNewComments"
+              (click)="openTask(task)"
             >
-              <div class="task-status" [ngClass]="getTaskStatusClass(task)">
+              <div class="task-status">
                 <mat-icon>{{ getTaskIcon(task) }}</mat-icon>
+                <span
+                  *ngIf="task.hasNewComments"
+                  class="comment-indicator"
+                ></span>
               </div>
-              <div class="task-info">
-                <h4>{{ task.title }}</h4>
+
+              <div class="task-content">
+                <h4>
+                  {{ task.homeTaskName }}
+                  <span *ngIf="task.isNew" class="new-badge">NEW</span>
+                </h4>
+
                 <div class="task-meta">
-                  <span>Урок {{ getLessonNumber(task.lessonId) }}</span>
-                  <span>{{ task.deadline | date : "dd.MM.yy" }}</span>
+                  <span
+                    >Дедлайн: {{ task.duration.endDate | date : "dd.MM.yy" }}</span
+                  >
+                  <span *ngIf="getStudentWork$(task) | async">
+                    Оценка: {{ getWorkScore$(task) | async }}
+                  </span>
                 </div>
               </div>
             </div>

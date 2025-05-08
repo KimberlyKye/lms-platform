@@ -4,7 +4,10 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
-import {  provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,5 +16,5 @@ export const appConfig: ApplicationConfig = {
     AuthService,
     AuthGuard,
     provideHttpClient(withInterceptorsFromDi()),
-  ]
+  ],
 };
