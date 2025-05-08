@@ -1,6 +1,7 @@
+import { Entity } from './entity';
 import { HomeTask } from './home-task';
 
-export class Lesson {
+export class Lesson extends Entity {
   lessonName: string;
   description: string;
   date: string | Date;
@@ -11,8 +12,10 @@ export class Lesson {
     lessonName: string,
     description: string,
     date: string | Date,
-    material?: any
+    material?: any,
+    id?: number
   ) {
+    super(id);
     this.lessonName = lessonName;
     this.description = description;
     this.date = date;

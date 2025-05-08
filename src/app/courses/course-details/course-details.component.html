@@ -34,55 +34,117 @@
     </div>
   </div>
 
-  <!-- Список уроков -->
-  <mat-accordion class="lessons-accordion">
-    <mat-expansion-panel *ngFor="let lesson of course?.lessons; index as i">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Урок {{ i + 1 }}: {{ lesson.lessonName }}
-        </mat-panel-title>
-        <mat-panel-description>
-          {{ lesson.date | date : "dd.MM.yyyy" }}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
+  <!-- Основной контент в 2 колонки -->
+  <div class="course-layout">
+    <!-- Левая колонка - Уроки -->
+    <div class="lessons-column">
+      <!-- Список уроков -->
+      <mat-accordion class="lessons-accordion">
+        <mat-expansion-panel *ngFor="let lesson of course?.lessons; index as i">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Урок {{ i + 1 }}: {{ lesson.lessonName }}
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ lesson.date | date : "dd.MM.yyyy" }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
 
-      <!-- Материалы урока -->
-      <div class="lesson-content">
-        <h3>Материалы</h3>
-        <p>{{ lesson.description }}</p>
+          <!-- Материалы урока -->
+          <div class="lesson-content">
+            <h3>Материалы</h3>
+            <p>{{ lesson.description }}</p>
 
-        <div *ngIf="lesson.material" class="materials">
-          <a mat-stroked-button [href]="lesson.material.url" download>
-            <mat-icon>download</mat-icon>
-            Скачать материалы
-          </a>
-        </div>
-      </div>
+            <div *ngIf="lesson.material" class="materials">
+              <a mat-stroked-button [href]="lesson.material.url" download>
+                <mat-icon>download</mat-icon>
+                Скачать материалы
+              </a>
+            </div>
+          </div>
 
-      <!-- Домашние задания -->
-      <div *ngIf="lesson.homeTasks.length" class="home-tasks">
-        <h3>Домашние задания</h3>
+          <!-- Домашние задания -->
+          <div *ngIf="lesson.homeTasks.length" class="home-tasks">
+            <h3>Домашние задания</h3>
 
-        <mat-card *ngFor="let task of lesson.homeTasks" class="task-card">
-          <mat-card-header>
-            <mat-card-title>{{ task.homeTaskName }}</mat-card-title>
-            <mat-card-subtitle>
-              Дедлайн: {{ task.duration.endDate | date : "dd.MM.yyyy" }}
-            </mat-card-subtitle>
-          </mat-card-header>
+            <mat-card *ngFor="let task of lesson.homeTasks" class="task-card">
+              <mat-card-header>
+                <mat-card-title>{{ task.homeTaskName }}</mat-card-title>
+                <mat-card-subtitle>
+                  Дедлайн: {{ task.duration.endDate | date : "dd.MM.yyyy" }}
+                </mat-card-subtitle>
+              </mat-card-header>
 
-          <mat-card-content>
-            <p>{{ task.description }}</p>
-          </mat-card-content>
+              <mat-card-content>
+                <p>{{ task.description }}</p>
+              </mat-card-content>
 
-          <mat-card-actions>
-            <button mat-button (click)="openTaskDialog(task)">
-              <mat-icon>send</mat-icon>
-              Отправить решение
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+              <mat-card-actions>
+                <button mat-button (click)="openTaskDialog(task)">
+                  <mat-icon>send</mat-icon>
+                  Отправить решение
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+
+    <!-- Правая колонка - Список ДЗ -->
+    <div class="tasks-sidebar">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>assignment</mat-icon>
+            Все задания
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ filteredTasks.length }} из {{ allTasks.length }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <!-- Фильтры -->
+          <div class="filters">
+            <mat-form-field>
+              <mat-label>Статус</mat-label>
+              <mat-select [(ngModel)]="taskFilter">
+                <mat-option value="all">Все</mat-option>
+                <mat-option value="active">Активные</mat-option>
+                <mat-option value="completed">Сданные</mat-option>
+                <mat-option value="late">Просроченные</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- Список заданий -->
+          <div class="tasks-list">
+            <div
+              *ngFor="let task of filteredTasks"
+              class="task-item"
+              [class.active]="activeTaskId === task.id"
+              (click)="navigateToTask(task)"
+            >
+              <div class="task-status" [ngClass]="getTaskStatusClass(task)">
+                <mat-icon>{{ getTaskIcon(task) }}</mat-icon>
+              </div>
+              <div class="task-info">
+                <h4>{{ task.title }}</h4>
+                <div class="task-meta">
+                  <span>Урок {{ getLessonNumber(task.lessonId) }}</span>
+                  <span>{{ task.deadline | date : "dd.MM.yy" }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!filteredTasks.length" class="no-tasks">
+              <mat-icon>check_circle</mat-icon>
+              <p>Нет заданий</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>
