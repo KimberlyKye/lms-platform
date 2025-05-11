@@ -5,12 +5,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subscription } from 'rxjs';
+import { Person } from '../shared/types/person';
 
 @Component({
   selector: 'app-home',
@@ -61,23 +62,46 @@ export class HomeComponent {
   onSubmit(form: NgForm) {
     if (form.invalid) return;
 
-    const { email, password, name } = form.value;
-
     if (this.isLoginMode) {
       // Логин
-      this.authService.login(email, password).subscribe({
+      this.authService.login(form.value.email, form.value.password).subscribe({
         next: () => {
+          this.snackBar.open(
+            'Вы успешно вошли! Переход на страницу профиля',
+            'OK'
+          );
           // Перенаправление пользователя на страницу профиля
-          this.authService.redirectToCalendar();
+          this.authService.redirectToProfile();
         },
         error: (error) => {
           // Обработка ошибки входа
           console.error(error);
+          this.snackBar.open(
+            `Ошибка входа. Попробуйте позже: ${error.title}`,
+            'OK'
+          );
         },
       });
     } else {
       // Регистрация
-      this.authService.register(email, password, name).subscribe();
+      const newUser: Person = form.value;
+      this.authService.register(newUser).subscribe({
+        next: () => {
+          this.snackBar.open('Регистрация прошла успешно!', 'OK');
+          this.authService.redirectToProfile(); // Переключение на страницу входа
+        },
+        error: (error: HttpErrorResponse) => {
+          // Обработка ошибки регистрации
+          console.error(error);
+          if (error.error.errors) {
+            error.error.errors?.forEach((err: any) => {
+              console.log(err);
+            });
+          } else {
+            this.snackBar.open(`Ошибка регистрации: ${error.error}`, 'OK');
+          }
+        },
+      });
     }
   }
 

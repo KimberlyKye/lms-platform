@@ -33,7 +33,7 @@ import { map, Observable } from 'rxjs';
     MatProgressSpinnerModule,
     MatSelectModule,
     FormsModule,
-    RouterModule
+    RouterModule,
   ],
 })
 export class CourseDetailsComponent implements OnInit {
@@ -164,11 +164,15 @@ export class CourseDetailsComponent implements OnInit {
   getStudentWork$(task: HomeTask): Observable<HomeWork | null> {
     return this.authService.getCurrentUser().pipe(
       map((user) => {
-        const currentStudentId = user.id;
-        const studentWork = task.homeWorks.find(
-          (hw) => hw.student.id === currentStudentId
-        );
-        return studentWork ?? null;
+        if (user) {
+          const currentStudentId = user.id;
+          const studentWork = task.homeWorks.find(
+            (hw) => hw.student.id === currentStudentId
+          );
+          return studentWork ?? null;
+        }
+
+        return null;
       })
     );
   }

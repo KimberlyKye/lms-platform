@@ -37,7 +37,45 @@
       <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
         <!-- Имя (только для регистрации) -->
         <mat-form-field *ngIf="!isLoginMode">
-          <input matInput name="name" ngModel placeholder="Ваше имя" required />
+          <input
+            matInput
+            name="firstName"
+            ngModel
+            placeholder="Ваше имя"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field *ngIf="!isLoginMode">
+          <input
+            matInput
+            name="lastName"
+            ngModel
+            placeholder="Ваша фамилия"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field *ngIf="!isLoginMode">
+          <input
+            matInput
+            name="birthDate"
+            type="date"
+            ngModel
+            placeholder="Дата рождения"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field *ngIf="!isLoginMode">
+          <input
+            matInput
+            type="tel"
+            name="phoneNumber"
+            ngModel
+            placeholder="Номер телефона"
+            required
+          />
         </mat-form-field>
 
         <!-- Email -->

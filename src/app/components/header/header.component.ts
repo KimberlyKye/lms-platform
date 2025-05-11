@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
@@ -9,12 +9,18 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatButtonModule, RouterModule],
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
-  host: { 'class': 'dark-theme' }
+  host: { class: 'dark-theme' },
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements AfterViewInit {
   isLoggedIn = false;
 
   constructor(private authService: AuthService, private router: Router) {}
@@ -26,7 +32,7 @@ export class HeaderComponent implements OnInit {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     // Подписываемся на изменения авторизации
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn;
@@ -35,6 +41,6 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate(['/home']);
   }
 }

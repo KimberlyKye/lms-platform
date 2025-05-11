@@ -28,7 +28,7 @@ export class CalendarComponent {
 
   ngOnInit() {
     this.calendarService
-      .getUserEvents(this.authService.userId!)
+      .getUserEvents(this.authService.userId!.toString())
       .subscribe((events) => {
         this.upcomingDeadlines = events.filter((event: EventInput) => {
           this.calendarOptions.events = events;

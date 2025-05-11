@@ -50,7 +50,7 @@ export class CoursesComponent implements OnInit {
         name: 'Иван Петров',
         email: 'ivan@example.com',
         phoneNumber: '+7 (900) 123-45-67',
-        dateOfBirth: new Date(1985, 5, 15),
+        birthDate: new Date(1985, 5, 15),
       },
       duration: {
         startDate: new Date(2024, 5, 1),

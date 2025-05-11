@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -10,7 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { ChangePasswordComponent } from '../components/change-password/change-password.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Person } from '../shared/types/person';
+import moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-profile',
@@ -33,28 +42,44 @@ export class ProfileComponent implements OnInit {
   // Данные пользователя
   avatarUrl: string | null = null;
   profileForm: FormGroup;
+  currentUser: Person | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  snackBar = inject(MatSnackBar);
+
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: ActivatedRoute
+  ) {
     this.profileForm = this.fb.group({
-      name: ['', [Validators.required]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: [{ value: '', disabled: true }, [Validators.email]],
-      phone: ['', [Validators.pattern(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/)]],
+      phone: ['', [Validators.required]],
+      birthDate: ['', [Validators.required]],
     });
   }
 
   ngOnInit() {
-    this.loadUserData();
+    this.router.url.subscribe(() => {
+      this.loadUserData();
+    });
   }
 
   // Загрузка данных пользователя
   loadUserData() {
     this.authService.getCurrentUser().subscribe((user) => {
-      this.profileForm.patchValue({
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-      });
-      this.avatarUrl = user.avatarUrl;
+      this.currentUser = user;
+      if (user) {
+        let date = moment(new Date(user.birthDate)).format('YYYY-MM-DD');
+        this.profileForm.patchValue({
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phone: user.phoneNumber,
+          birthDate: date,
+        });
+      }
     });
   }
 
@@ -62,18 +87,20 @@ export class ProfileComponent implements OnInit {
   saveProfile() {
     if (this.profileForm.invalid) return;
 
-    this.authService.updateProfile(this.profileForm.value).subscribe({
+    const user: Person = { ...this.currentUser, ...this.profileForm.value };
+
+    this.authService.updateProfile(user).subscribe({
       next: () => {
         // Уведомление об успехе
+        this.snackBar.open('Профиль успешно сохранен', 'Закрыть');
       },
-      error: () => {
+      error: (err) => {
         // Уведомление об ошибке
+        this.snackBar.open(
+          `Профиль не удалось обновить: ${err?.title}`,
+          'Закрыть'
+        );
       },
     });
-  }
-
-  // Смена аватарки
-  changeAvatar() {
-    // Логика загрузки файла
   }
 }

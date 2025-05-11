@@ -1,13 +1,15 @@
 import { Entity } from './entity';
 
 export class Person extends Entity {
-  name: string;
+  firstName?: string;
+  lastName?: string;
   phoneNumber: string;
   email: string;
-  dateOfBirth: string | Date;
+  birthDate: string | Date;
 
   constructor(
-    name: string,
+    firstName: string,
+    lastName: string,
     phoneNumber: string,
     email: string,
     dateOfBirth: string | Date,
@@ -15,9 +17,10 @@ export class Person extends Entity {
   ) {
     super(id);
 
-    this.name = name;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.phoneNumber = phoneNumber;
     this.email = email;
-    this.dateOfBirth = dateOfBirth;
+    this.birthDate = dateOfBirth;
   }
 }

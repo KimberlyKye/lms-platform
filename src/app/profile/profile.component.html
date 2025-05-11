@@ -20,7 +20,15 @@
           <mat-card-content>
             <!-- Поля формы -->
             <mat-form-field>
-              <input matInput formControlName="name" placeholder="ФИО" />
+              <input matInput formControlName="firstName" placeholder="Имя" />
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                formControlName="lastName"
+                placeholder="Фамилия"
+              />
             </mat-form-field>
 
             <mat-form-field>
@@ -36,6 +44,15 @@
             <mat-form-field>
               <input matInput formControlName="phone" placeholder="Телефон" />
               <mat-hint>Формат: +7 (XXX) XXX-XX-XX</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input
+                matInput
+                type="date"
+                formControlName="birthDate"
+                placeholder="Дата рождения"
+              />
             </mat-form-field>
           </mat-card-content>
 
