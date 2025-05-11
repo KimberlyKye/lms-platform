@@ -3,8 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
 
+export type UserRole = 'student' | 'teacher';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private currentUserRole = new BehaviorSubject<UserRole | null>('teacher');
   private isAuthenticated = true;
   userId: string | null = null;
 
@@ -15,21 +18,29 @@ export class AuthService {
   private router = inject(Router);
   private http = inject(HttpClient);
 
-  login(email: string, password: string): Observable<void> {
+  get role(): UserRole | null {
+    return 'student';
+    return this.currentUserRole.value;
+  }
+
+  login(email: string, password: string): Observable<{ role: UserRole }> {
     this.changeLoginState(true);
+
     return of();
 
-    return this.http.post<void>('/api/auth/login', { email, password }).pipe(
-      tap((res) => {
-        this.changeLoginState(true);
-        localStorage.setItem('user', JSON.stringify({ email, password }));
-      }),
-      catchError((err) => {
-        let errorMsg = 'Ошибка входа';
-        if (err.status === 401) errorMsg = 'Неверный email или пароль';
-        throw new Error(errorMsg);
-      })
-    );
+    return this.http
+      .post<{ role: UserRole }>('/api/auth/login', Credential)
+      .pipe(
+        tap((response) => {
+          this.currentUserRole.next(response.role);
+          localStorage.setItem('userRole', response.role);
+        }),
+        catchError((err) => {
+          let errorMsg = 'Ошибка входа';
+          if (err.status === 401) errorMsg = 'Неверный email или пароль';
+          throw new Error(errorMsg);
+        })
+      );
   }
 
   sendPasswordResetEmail(email: any): Observable<void> {

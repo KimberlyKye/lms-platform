@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-import { Course } from '../shared/types/course';
-import { Teacher } from '../shared/types/teacher';
-import { Duration } from '../shared/types/duration';
-import { CourseState } from '../shared/enums/course-state.enum';
+import { Course } from '../../shared/types/course';
+import { Teacher } from '../../shared/types/teacher';
+import { Duration } from '../../shared/types/duration';
+import { CourseState } from '../../shared/enums/course-state.enum';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { Lesson } from '../shared/types/lesson';
+import { Lesson } from '../../shared/types/lesson';
 
 @Component({
   selector: 'app-courses',

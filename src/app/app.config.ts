@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
+import { AppRoutingModule } from './app.routes';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import {
@@ -12,7 +12,7 @@ import {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
+    AppRoutingModule,
     AuthService,
     AuthGuard,
     provideHttpClient(withInterceptorsFromDi()),

@@ -1,0 +1,90 @@
+<div class="dashboard-container">
+  <!-- Приветствие -->
+  <div class="welcome-section">
+    <h1>Добро пожаловать, {{ teacherName }}!</h1>
+    <p>Сегодня: {{ today | date:'dd MMMM yyyy' }}</p>
+  </div>
+
+  <!-- Карточки быстрого доступа -->
+  <div class="quick-actions-grid">
+    <app-quick-action-card
+      icon="assignment"
+      title="Проверить работы"
+      [count]="stats.pendingAssignments"
+      route="/teacher/grading"
+      color="#3f51b5">
+    </app-quick-action-card>
+
+    <app-quick-action-card
+      icon="group"
+      title="Мои студенты"
+      [count]="stats.totalStudents"
+      route="/teacher/students"
+      color="#4caf50">
+    </app-quick-action-card>
+
+    <app-quick-action-card
+      icon="library_books"
+      title="Мои курсы"
+      [count]="stats.activeCourses"
+      route="/teacher/courses"
+      color="#ff9800">
+    </app-quick-action-card>
+  </div>
+
+  <!-- Графики и статистика -->
+  <div class="stats-section">
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Активность студентов</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <canvas #activityChart width="400" height="250"></canvas>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Последние сдачи</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-list dense>
+          <mat-list-item *ngFor="let submission of recentSubmissions">
+            <div class="submission-item">
+              <span class="student">{{ submission.studentName }}</span>
+              <span class="course">{{ submission.courseName }}</span>
+              <span class="date">{{ submission.date | date:'dd.MM.yy' }}</span>
+              <mat-icon class="new-icon" *ngIf="submission.isNew">fiber_new</mat-icon>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Ближайшие дедлайны -->
+  <mat-card class="deadlines-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>event</mat-icon>
+        Ближайшие дедлайны
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let deadline of upcomingDeadlines">
+          <mat-expansion-panel-header>
+            <mat-panel-title>{{ deadline.courseName }}</mat-panel-title>
+            <mat-panel-description>
+              {{ deadline.taskName }} — {{ deadline.date | date:'dd.MM.yyyy' }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>{{ deadline.description }}</p>
+          <button mat-button [routerLink]="['/teacher/courses', deadline.courseId]">
+            Перейти к курсу
+          </button>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,46 +1,43 @@
-import { Routes } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
-import { CalendarComponent } from './calendar/calendar.component';
-import { CourseDetailsComponent } from './courses/course-details/course-details.component';
-import { HomeComponent } from './home/home.component';
-import { ProfileComponent } from './profile/profile.component';
-import { CoursesComponent } from './courses/courses.component';
-import { ProgressComponent } from './components/progress/progress.component';
+import { TeacherGuard } from './teacher/teacher.guard';
 
-export const routes: Routes = [
-  { path: '', component: HomeComponent },
+const routes: Routes = [
+  // Public routes
   {
-    path: 'home',
-    component: HomeComponent,
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
+
+  // Main layout (protected)
   {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'progress',
-    component: ProgressComponent,
-    canActivate: [AuthGuard],
-    // data: { role: 'student' } // Только для студентов
-  },
-  {
-    path: 'calendar',
-    component: CalendarComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'courses',
-    component: CoursesComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'courses/:id',
-    component: CourseDetailsComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: '**',
-    component: HomeComponent,
+    path: '',
+    // canActivate: [AuthGuard],
+    children: [
+      // Common routes (for all authenticated users)
+      {
+        path: '',
+        loadChildren: () =>
+          import('./main/main.module').then((m) => m.MainModule),
+      },
+
+      // Teacher routes
+      {
+        path: 'teacher',
+        // canActivate: [TeacherGuard],
+        loadChildren: () =>
+          import('./teacher/teacher.module').then((m) => m.TeacherModule),
+      },
+
+      // Fallback
+      { path: '**', redirectTo: '/courses' },
+    ],
   },
 ];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

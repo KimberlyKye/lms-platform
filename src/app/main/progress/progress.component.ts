@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
-import { CourseService } from '../../courses/course.service';
+import { CourseService } from '../../main/courses/course.service';
 
 @Component({
   selector: 'app-progress',

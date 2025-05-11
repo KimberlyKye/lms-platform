@@ -3,20 +3,20 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { Course } from '../../shared/types/course';
+import { Course } from '../../../shared/types/course';
 import { CourseService } from '../course.service';
-import { SubmitTaskDialogComponent } from '../../components/submit-task-dialog/submit-task-dialog.component';
+import { SubmitTaskDialogComponent } from '../../../components/submit-task-dialog/submit-task-dialog.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { TaskStatus } from '../../shared/types/task-status';
+import { TaskStatus } from '../../../shared/types/task-status';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
-import { HomeTask } from '../../shared/types/home-task';
-import { UserService } from '../../services/user.service';
-import { AuthService } from '../../auth/auth.service';
-import { HomeWork } from '../../shared/types/home-work';
+import { HomeTask } from '../../../shared/types/home-task';
+import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../auth/auth.service';
+import { HomeWork } from '../../../shared/types/home-work';
 import { map, Observable } from 'rxjs';
 
 @Component({
@@ -33,7 +33,7 @@ import { map, Observable } from 'rxjs';
     MatProgressSpinnerModule,
     MatSelectModule,
     FormsModule,
-    RouterModule
+    RouterModule,
   ],
 })
 export class CourseDetailsComponent implements OnInit {

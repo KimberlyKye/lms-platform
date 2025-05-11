@@ -1,0 +1,11 @@
+<mat-card [style.background]="color" (click)="navigate()">
+  <mat-card-content>
+    <div class="quick-action-content">
+      <mat-icon>{{ icon }}</mat-icon>
+      <div class="text">
+        <h3>{{ title }}</h3>
+        <span *ngIf="count !== undefined" class="count">{{ count }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

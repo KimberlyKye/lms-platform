@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { Course } from '../shared/types/course';
-import { Duration } from '../shared/types/duration';
-import { CourseState } from '../shared/enums/course-state.enum';
-import { Teacher } from '../shared/types/teacher';
-import { Lesson } from '../shared/types/lesson';
-import { HomeTask } from '../shared/types/home-task';
+import { Course } from '../../shared/types/course';
+import { Duration } from '../../shared/types/duration';
+import { CourseState } from '../../shared/enums/course-state.enum';
+import { Teacher } from '../../shared/types/teacher';
+import { Lesson } from '../../shared/types/lesson';
+import { HomeTask } from '../../shared/types/home-task';
 import { HttpClient } from '@angular/common/http';
-import { CourseProgress } from '../shared/types/course-progress';
-import { StudentProgress } from '../shared/types/student-progress';
+import { CourseProgress } from '../../shared/types/course-progress';
+import { StudentProgress } from '../../shared/types/student-progress';
 
 @Injectable({
   providedIn: 'root',

@@ -4,13 +4,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../auth/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ChangePasswordComponent } from '../components/change-password/change-password.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { ChangePasswordComponent } from '../../components/change-password/change-password.component';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +26,7 @@ import { RouterModule } from '@angular/router';
     MatIconModule,
     RouterModule,
   ],
+  providers: [AuthService],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })

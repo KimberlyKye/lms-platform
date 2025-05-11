@@ -1,0 +1,62 @@
+<mat-toolbar>
+  <span>Проверка работ</span>
+  <span class="spacer"></span>
+  <mat-form-field>
+    <mat-label>Курс</mat-label>
+    <mat-select [(ngModel)]="selectedCourse">
+      <mat-option *ngFor="let course of courses" [value]="course">
+        {{ course.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-toolbar>
+
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let task of pendingTasks">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ task.studentName }} — {{ task.taskName }}
+      </mat-panel-title>
+      <mat-panel-description>
+        Сдано: {{ task.submittedDate | date : "dd.MM.yyyy" }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <!-- Контент работы -->
+    <div class="submission-content">
+      <h4>Решение:</h4>
+      <p>{{ task.studentComment || "Нет комментария" }}</p>
+
+      <div *ngIf="task.attachments" class="attachments">
+        <h4>Файлы:</h4>
+        <div *ngFor="let file of task.attachments" class="file-item">
+          <mat-icon>insert_drive_file</mat-icon>
+          <a [href]="file.url" target="_blank">{{ file.name }}</a>
+        </div>
+      </div>
+
+      <!-- Форма оценки -->
+      <form [formGroup]="gradingForm" class="grading-form">
+        <mat-form-field>
+          <mat-label>Оценка</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="grade"
+            min="0"
+            max="100"
+          />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Комментарий</mat-label>
+          <textarea matInput formControlName="comment" rows="3"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="submitGrade(task)">
+          Сохранить оценку
+        </button>
+      </form>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

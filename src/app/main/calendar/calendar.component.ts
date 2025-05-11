@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { EventClickArg, EventInput, FormatterInput } from '@fullcalendar/core';
 import { CalendarService } from './calendar.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth/auth.service';
 import { MatChipsModule } from '@angular/material/chips';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-calendar',
