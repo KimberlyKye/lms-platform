@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { Student } from '../shared/types/student';
+import { Person } from '../shared/types/person';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -53,23 +55,50 @@ export class AuthService {
   }
 
   register(email: any, password: any, name: any): Observable<any> {
-    throw new Error('Method not implemented.');
+    //TODO: переписать на модель Person
+    if (!email || !password || !name) {
+      return of(null);
+    }
+
+    let params = new HttpParams();
+    params = params.append('email', email.toString());
+    params = params.append('password', password.toString());
+    params = params.append('name', name.toString());
+
+    return this.http.post<any>('https://localhost:7023/api/StudentProfile', {
+      params: params,
+    });
   }
 
   getCurrentUser(): Observable<any> {
+    if (!this.userId) {
+      return of(null);
+    }
     // Здесь можно отправить запрос на сервер для получения информации о текущем пользователе
     // и возвращать Observable с результатом запроса.
     // В данном примере просто возвращаем пользователя из локального хранилища.
-    const user = localStorage.getItem('user') || {
-      email: 'qqq@mail.ru',
-      password: '*******',
-      name: 'Al Ro',
-    };
-    return of(user);
+    const user = localStorage.getItem('user');
+    if (user) {
+      return of(user);
+    }
+    return this.http.get<any>(
+      `https://localhost:7023/api/StudentProfile/${this.userId}`
+    );
   }
 
-  updateProfile(value: any): Observable<any> {
-    throw new Error('Method not implemented.');
+  updateProfile(profileInfo: Person): Observable<any> {
+    if (!this.userId || !profileInfo) {
+      return of(null);
+    }
+
+    let params = new HttpParams();
+    Object.entries(profileInfo).forEach((key, value) => {
+      params = params.append(key.toString(), value.toString());
+    });
+
+    return this.http.put<any>('https://localhost:7023/api/StudentProfile', {
+      params: params,
+    });
   }
 
   redirectToCalendar() {
