@@ -2,36 +2,47 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { TeacherGuard } from './teacher/teacher.guard';
+import { StudentGuard } from './student/student.guard';
+import { HomeComponent } from './auth/home/home.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   // Public routes
   {
-    path: 'auth',
+    path: 'home',
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+    component: HomeComponent,
   },
 
   // Main layout (protected)
   {
     path: '',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
-      // Common routes (for all authenticated users)
+      // Student routes
       {
-        path: '',
+        path: 'student',
+        canActivate: [StudentGuard],
         loadChildren: () =>
-          import('./main/main.module').then((m) => m.MainModule),
+          import('./student/student.module').then((m) => m.StudentModule),
       },
 
       // Teacher routes
       {
         path: 'teacher',
-        // canActivate: [TeacherGuard],
+        canActivate: [TeacherGuard],
         loadChildren: () =>
           import('./teacher/teacher.module').then((m) => m.TeacherModule),
       },
 
+      // // Unautorized routes
+      // {
+      //   path: 'home',
+      //   loadChildren: () =>
+      //     import('./auth/auth.module').then((m) => m.AuthModule),
+      // },
+
       // Fallback
-      { path: '**', redirectTo: '/courses' },
+      { path: '**', redirectTo: '/home' },
     ],
   },
 ];

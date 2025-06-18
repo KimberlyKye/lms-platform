@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { GradingComponent } from './grading/grading.component';
 import { TeacherCoursesComponent } from './courses/courses.component';
-import { CourseDetailsComponent } from '../main/courses/course-details/course-details.component';
+import { CourseDetailsComponent } from '../student/courses/course-details/course-details.component';
 import { StudentsManagementComponent } from './students/students.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NgModule } from '@angular/core';

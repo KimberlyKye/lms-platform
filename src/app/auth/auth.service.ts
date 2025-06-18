@@ -2,34 +2,31 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { AuthApiService } from './auth-api.service';
 
 export type UserRole = 'student' | 'teacher';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserRole = new BehaviorSubject<UserRole | null>('teacher');
-  private isAuthenticated = true;
+  private isAuthenticated = false;
   userId: string | null = null;
 
-  // auth.service.ts
-  private isLoggedInSubject = new BehaviorSubject<boolean>(true);
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   private router = inject(Router);
   private http = inject(HttpClient);
+  private api = inject(AuthApiService);
 
   get role(): UserRole | null {
-    return 'student';
     return this.currentUserRole.value;
   }
 
   login(email: string, password: string): Observable<{ role: UserRole }> {
     this.changeLoginState(true);
 
-    return of();
-
-    return this.http
-      .post<{ role: UserRole }>('/api/auth/login', Credential)
+    return this.api.login(email, password)
       .pipe(
         tap((response) => {
           this.currentUserRole.next(response.role);
@@ -68,7 +65,7 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<any> {
-    // Здесь можно отправить запрос на сервер для получения информации о текущем пользователе
+    // TODO: Здесь можно отправить запрос на сервер для получения информации о текущем пользователе
     // и возвращать Observable с результатом запроса.
     // В данном примере просто возвращаем пользователя из локального хранилища.
     const user = localStorage.getItem('user') || {
@@ -87,7 +84,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      this.router.navigate(['/calendar']);
+      this.router.navigate([`${this.currentUserRole}/profile`]);
     }
   }
 
@@ -95,7 +92,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      this.router.navigate(['/profile']);
+      this.router.navigate([`${this.currentUserRole}/profile`]);
     }
   }
 }
