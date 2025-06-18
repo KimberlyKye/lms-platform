@@ -22,6 +22,17 @@ export class AuthService {
   apiUrl: string = environment?.apiUrl ?? 'http://localhost:5271';
 
   // auth.service.ts
+import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
+import { AuthApiService } from './auth-api.service';
+
+export type UserRole = 'student' | 'teacher';
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private currentUserRole = new BehaviorSubject<UserRole | null>('teacher');
+  private isAuthenticated = false;
+  userId: string | null = null;
+
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
@@ -66,18 +77,27 @@ export class AuthService {
         return throwError(errorMsg);
       })
     );
+  private api = inject(AuthApiService);
 
-    return this.http.post<void>('/api/auth/login', { email, password }).pipe(
-      tap((res) => {
-        this.changeLoginState(true);
-        localStorage.setItem('user', JSON.stringify({ email, password }));
-      }),
-      catchError((err) => {
-        let errorMsg = 'Ошибка входа';
-        if (err.status === 401) errorMsg = 'Неверный email или пароль';
-        throw new Error(errorMsg);
-      })
-    );
+  get role(): UserRole | null {
+    return this.currentUserRole.value;
+  }
+
+  login(email: string, password: string): Observable<{ role: UserRole }> {
+    this.changeLoginState(true);
+
+    return this.api.login(email, password)
+      .pipe(
+        tap((response) => {
+          this.currentUserRole.next(response.role);
+          localStorage.setItem('userRole', response.role);
+        }),
+        catchError((err) => {
+          let errorMsg = 'Ошибка входа';
+          if (err.status === 401) errorMsg = 'Неверный email или пароль';
+          throw new Error(errorMsg);
+        })
+      );
   }
 
   sendPasswordResetEmail(email: any): Observable<void> {
@@ -121,8 +141,8 @@ export class AuthService {
       );
   }
 
-  getCurrentUser(): Observable<Person | null> {
-    // Здесь можно отправить запрос на сервер для получения информации о текущем пользователе
+  getCurrentUser(): Observable<any> {
+    // TODO: Здесь можно отправить запрос на сервер для получения информации о текущем пользователе
     // и возвращать Observable с результатом запроса.
     // В данном примере просто возвращаем пользователя из локального хранилища.
     if (!this.userId) {
@@ -166,7 +186,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      this.router.navigate(['/calendar']);
+      this.router.navigate([`${this.currentUserRole}/profile`]);
     }
   }
 
@@ -174,7 +194,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      this.router.navigate(['/profile']);
+      this.router.navigate([`${this.currentUserRole}/profile`]);
     }
   }
 }

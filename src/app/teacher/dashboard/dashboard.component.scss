@@ -1,0 +1,71 @@
+.dashboard-container {
+  padding: 20px;
+  display: grid;
+  gap: 24px;
+
+  .welcome-section {
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    p {
+      color: #666;
+      margin: 8px 0 0;
+    }
+  }
+
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .stats-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    @media (max-width: 1200px) {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+      height: 100%;
+
+      canvas {
+        max-height: 250px;
+      }
+    }
+  }
+
+  .submission-item {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .student {
+      width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .course {
+      flex: 1;
+      padding: 0 10px;
+      color: #666;
+    }
+
+    .new-icon {
+      color: #ff4081;
+    }
+  }
+
+  .deadlines-card {
+    mat-expansion-panel {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+
