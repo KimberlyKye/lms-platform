@@ -34,20 +34,20 @@ export const routes: Routes = [
     // canActivate: [AuthGuard],
     children: [
       // Student only routes
-      // {
-      //   path: '',
-      //   canActivate: [StudentGuard],
-      //   loadChildren: () =>
-      //     import('./student/student.module').then((m) => m.StudentModule),
-      // },
-
-      // Teacher only routes
       {
         path: '',
-        canActivate: [TeacherGuard],
+        canActivate: [StudentGuard],
         loadChildren: () =>
-          import('./teacher/teacher.module').then((m) => m.TeacherModule),
+          import('./student/student.module').then((m) => m.StudentModule),
       },
+
+      // Teacher only routes
+      // {
+      //   path: '',
+      //   canActivate: [TeacherGuard],
+      //   loadChildren: () =>
+      //     import('./teacher/teacher.module').then((m) => m.TeacherModule),
+      // },
 
       // // Unautorized routes
       // {
