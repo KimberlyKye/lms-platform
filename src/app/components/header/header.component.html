@@ -22,10 +22,25 @@
       <mat-icon>book</mat-icon>
       Курсы
     </a>
-      <a mat-button routerLink="/progress" routerLinkActive="active">
-        <mat-icon>trending_up</mat-icon>
-        Прогресс обучения
-      </a>
+    <a
+      mat-button
+      *ngIf="hasStudentRole"
+      routerLink="/progress"
+      routerLinkActive="active"
+    >
+      <mat-icon>trending_up</mat-icon>
+      Прогресс обучения
+    </a>
+    <a
+      mat-button
+      *ngIf="hasTeacherRole"
+      routerLink="/grading"
+      routerLinkActive="active"
+    >
+      <mat-icon>trending_up</mat-icon>
+      Оценка студентов
+    </a>
+
     <button mat-icon-button (click)="logout()" title="Выйти">
       <mat-icon>logout</mat-icon>
     </button>
@@ -38,16 +53,25 @@
   </a>
 
   <!-- Для мобильных -->
-<button *ngIf="isLoggedIn" mat-icon-button (click)="toggleMobileMenu()" class="mobile-menu-button">
-  <mat-icon>menu</mat-icon>
-</button>
+  <button
+    *ngIf="isLoggedIn"
+    mat-icon-button
+    (click)="toggleMobileMenu()"
+    class="mobile-menu-button"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
 
-<!-- Мобильное меню (появляется по клику) -->
-<div *ngIf="isMobileMenuOpen" class="mobile-menu">
-  <a mat-button routerLink="/profile" (click)="toggleMobileMenu()">Профиль</a>
-  <a mat-button routerLink="/calendar" (click)="toggleMobileMenu()">Календарь</a>
-  <a mat-button routerLink="/courses" (click)="toggleMobileMenu()">Курсы</a>
-  <a mat-button routerLink="/progress" (click)="toggleMobileMenu()">Прогресс обучения</a>
-  <button mat-button (click)="logout(); toggleMobileMenu()">Выйти</button>
-</div>
+  <!-- Мобильное меню (появляется по клику) -->
+  <div *ngIf="isMobileMenuOpen" class="mobile-menu">
+    <a mat-button routerLink="/profile" (click)="toggleMobileMenu()">Профиль</a>
+    <a mat-button routerLink="/calendar" (click)="toggleMobileMenu()"
+      >Календарь</a
+    >
+    <a mat-button routerLink="/courses" (click)="toggleMobileMenu()">Курсы</a>
+    <a mat-button routerLink="/progress" (click)="toggleMobileMenu()"
+      >Прогресс обучения</a
+    >
+    <button mat-button (click)="logout(); toggleMobileMenu()">Выйти</button>
+  </div>
 </mat-toolbar>

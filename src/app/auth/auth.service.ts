@@ -13,6 +13,9 @@ import {
 import { Student } from '../shared/types/student';
 import { Person } from '../shared/types/person';
 import { environment } from '../../environments/environment';
+import { AuthApiService } from './auth-api.service';
+
+export type UserRole = 'student' | 'teacher';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -21,52 +24,76 @@ export class AuthService {
 
   apiUrl: string = environment?.apiUrl ?? 'http://localhost:5271';
 
-  // auth.service.ts
-import { BehaviorSubject, catchError, Observable, of, tap } from 'rxjs';
-import { AuthApiService } from './auth-api.service';
-
-export type UserRole = 'student' | 'teacher';
-
-@Injectable({ providedIn: 'root' })
-export class AuthService {
-  private currentUserRole = new BehaviorSubject<UserRole | null>('teacher');
-  private isAuthenticated = false;
-  userId: string | null = null;
+  private currentUserRole = new BehaviorSubject<UserRole | null>(null);
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
   private router = inject(Router);
   private http = inject(HttpClient);
+  private api = inject(AuthApiService);
+
   currentUser: any;
+  cr: UserRole | null = 'student';
 
   constructor() {
     const localUser = localStorage.getItem('user');
+    const userRole = localStorage.getItem('userRole');
     if (localUser) {
-      this.updateCurrentUser(JSON.parse(localUser ?? ''));
+      try {
+        let userInfo = {
+          user: JSON.parse(localUser ?? ''),
+          role: userRole as UserRole,
+        };
+        this.updateCurrentUser(userInfo);
+      } catch {
+        console.error(
+          'Не удалось считать информацию о пользователе - невалидный JSON'
+        );
+      }
     }
   }
 
-  updateCurrentUser(user?: Person): void {
-    this.currentUser = user;
-    if (user && user.id) {
-      this.userId = user.id!;
+  updateCurrentUser(userInfo?: { user?: Person; role?: UserRole }): void {
+    this.currentUser = userInfo?.user;
+    if (userInfo?.user?.id) {
+      this.userId = userInfo.user.id!;
       this.changeLoginState(true);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(userInfo.user));
+      if (userInfo.role) {
+        this.changeUserRole(userInfo.role);
+      }
     } else {
       this.userId = null;
       this.changeLoginState(false);
+      this.changeUserRole();
       localStorage.removeItem('user');
     }
-    console.log(user);
+
+    console.log(userInfo);
+  }
+
+  changeUserRole(role?: UserRole) {
+    this.cr = role ?? null;
+    if (role) {
+      this.currentUserRole.next(role);
+      localStorage.setItem('userRole', role);
+    } else {
+      this.currentUserRole.next(null);
+      localStorage.removeItem('userRole');
+    }
+  }
+
+  get role(): UserRole | null {
+    return this.cr;
+    // return this.currentUserRole.value;
   }
 
   login(email: string, password: string): Observable<void> {
-    // this.changeLoginState(true);
+    this.changeLoginState(true);
     // return of();
-    const path = new URL(`api/StudentProfile/${this.userId ?? 1}`, this.apiUrl);
-    return this.http.get<any>(path.toString()).pipe(
-      map((res) => {
+    return this.api.login(email, password, this.userId).pipe(
+      map((res: { user: Person; role: UserRole }) => {
         console.log(res);
         this.updateCurrentUser(res);
         return;
@@ -77,27 +104,6 @@ export class AuthService {
         return throwError(errorMsg);
       })
     );
-  private api = inject(AuthApiService);
-
-  get role(): UserRole | null {
-    return this.currentUserRole.value;
-  }
-
-  login(email: string, password: string): Observable<{ role: UserRole }> {
-    this.changeLoginState(true);
-
-    return this.api.login(email, password)
-      .pipe(
-        tap((response) => {
-          this.currentUserRole.next(response.role);
-          localStorage.setItem('userRole', response.role);
-        }),
-        catchError((err) => {
-          let errorMsg = 'Ошибка входа';
-          if (err.status === 401) errorMsg = 'Неверный email или пароль';
-          throw new Error(errorMsg);
-        })
-      );
   }
 
   sendPasswordResetEmail(email: any): Observable<void> {
@@ -153,7 +159,7 @@ export class AuthService {
     const path = new URL(`api/StudentProfile/${this.userId}`, this.apiUrl);
     return this.http.get<any>(path.toString()).pipe(
       map((user) => {
-        this.updateCurrentUser(user);
+        this.updateCurrentUser({ user: user });
         return user;
       }),
       catchError((error) => {
@@ -174,7 +180,7 @@ export class AuthService {
         ...profileInfo,
       })
       .pipe(
-        tap((user) => this.updateCurrentUser(user)),
+        tap((user) => this.updateCurrentUser({ user: user })),
         catchError((error) => {
           console.error('Ошибка при обновлении данных пользователя:', error);
           return throwError(error);
@@ -194,7 +200,7 @@ export class AuthService {
     if (!this.isLoggedIn()) {
       this.router.navigate(['/login']);
     } else {
-      this.router.navigate([`${this.currentUserRole}/profile`]);
+      this.router.navigate([`${this.currentUserRole?.value}/profile`]);
     }
   }
 }

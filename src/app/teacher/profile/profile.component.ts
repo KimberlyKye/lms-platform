@@ -39,7 +39,7 @@ import { Person } from '../../shared/types/person';
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent implements OnInit {
+export class TeacherProfileComponent implements OnInit {
   // Данные пользователя
   avatarUrl: string | null = null;
   profileForm: FormGroup;

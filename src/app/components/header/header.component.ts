@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService, UserRole } from '../../auth/auth.service';
 import { CommonModule } from '@angular/common';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -22,6 +22,15 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class HeaderComponent implements AfterViewInit {
   isLoggedIn = false;
+  role: UserRole | null = null;
+
+  get hasTeacherRole(): boolean {
+    return this.role === 'teacher';
+  }
+
+  get hasStudentRole(): boolean {
+    return this.role === 'student';
+  }
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -36,6 +45,9 @@ export class HeaderComponent implements AfterViewInit {
     // Подписываемся на изменения авторизации
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn;
+      if (this.isLoggedIn) {
+        this.role = this.authService.cr;
+      }
     });
   }
 

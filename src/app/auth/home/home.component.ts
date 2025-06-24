@@ -10,8 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Subscription } from 'rxjs';
-import { Person } from '../shared/types/person';
 import { AuthService } from '../auth.service';
+import { Person } from '../../shared/types/person';
 
 @Component({
   selector: 'app-home',

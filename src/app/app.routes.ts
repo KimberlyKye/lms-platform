@@ -4,6 +4,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { TeacherGuard } from './teacher/teacher.guard';
 import { StudentGuard } from './student/student.guard';
 import { HomeComponent } from './auth/home/home.component';
+import { RoleRouterGuard } from './role-router.guard';
 
 export const routes: Routes = [
   // Public routes
@@ -13,22 +14,36 @@ export const routes: Routes = [
     component: HomeComponent,
   },
 
+  // // Role-based lazy loading
+  // {
+  //   path: '',
+  //   canActivate: [AuthGuard],
+  //   children: [
+  //     {
+  //       path: '',
+  //       canActivate: [RoleRouterGuard],
+  //       children: [], // Динамическая загрузка в guard
+  //     },
+  //     { path: '**', redirectTo: '/calendar' }, // Fallback
+  //   ],
+  // },
+
   // Main layout (protected)
   {
     path: '',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     children: [
-      // Student routes
-      {
-        path: 'student',
-        canActivate: [StudentGuard],
-        loadChildren: () =>
-          import('./student/student.module').then((m) => m.StudentModule),
-      },
+      // Student only routes
+      // {
+      //   path: '',
+      //   canActivate: [StudentGuard],
+      //   loadChildren: () =>
+      //     import('./student/student.module').then((m) => m.StudentModule),
+      // },
 
-      // Teacher routes
+      // Teacher only routes
       {
-        path: 'teacher',
+        path: '',
         canActivate: [TeacherGuard],
         loadChildren: () =>
           import('./teacher/teacher.module').then((m) => m.TeacherModule),

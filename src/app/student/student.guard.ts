@@ -7,14 +7,14 @@ export class StudentGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    switch (this.auth.role) {
+    switch (this.auth.cr) {
       case 'student':
         return true;
       case 'teacher':
-        this.router.navigate(['/teacher/calendar']);
+        // this.router.navigate(['/teacher/calendar']);
         return false;
       default:
-        this.router.navigate(['/']);
+        // this.router.navigate(['/']);
         return false;
     }
   }
